@@ -3,6 +3,7 @@ import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
+import RegisterForm from "/Users/khali/COMP2140/clearspend/src/components/RegisterForm";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             ClearSpend is a personal finance management application designed to helo university students develop better financial habits.
           </p>
         </section>
+        <RegisterForm/>
       </main>
       <footer>
         <p>2026 ClearSpend. All rights reserved.</p>

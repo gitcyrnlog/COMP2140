@@ -1,73 +1,95 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-import RegisterForm from "/Users/khali/COMP2140/clearspend/src/components/RegisterForm";
+import { useState } from 'react';
+import Home from './pages/Home';
+import RegisterForm from './components/RegisterForm';
+import './App.css';
 
-function App() {
+type Page = "home" | "register";
+
+export default function App() {
+  const [page, setPage] = useState<Page>("home");
+
+  function navigate(nextPage: Page) {
+    setPage(nextPage);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
   return (
-    <div className ="app">
-      <header className="header">
-        <h1>ClearSpend</h1>
-        <nav>
-          <a href="#features">Features</a>
-          <a href="about">About</a>
-        </nav>
+    <div className='app'>
+      <header className='site-header container'>
+        <button
+          className='brand'
+          onClick={() => navigate("home")}
+          aria-label='ClearSpend home'
+          >
+            <span className='brand-mark' aria-hidden="true">
+              C
+            </span>
+
+            ClearSpend
+          </button>
+
+          {page === "home" ? (
+            <>
+              <nav aria-label='Main navigation'>
+                <a href='#how-it-works'> How it works</a>
+                <a href='#features'>Features</a>
+              </nav>
+
+              <button
+                className='button'
+                onClick={() => navigate("register")}
+                >
+                  Get Started
+                </button>
+            </>
+        ) : (
+          <button
+            className='text-button'
+            onClick={() => navigate("home")}
+            >
+              Back to home
+            </button>
+        )}
+
+
       </header>
 
       <main>
-        <section className="hero">
-          <h2>Type something here whoever is designing the frontend</h2>
-          <p>
-            write something else here 
-            here too
-          </p>
-          <button type="button">Get Started</button>
-        </section>
+        {page === "home" ? (
+          <Home onGetStarted={() => navigate("register")}/>
+        ) : (
+          <section className='registration-layout container'>
+            <div className='registration-copy'>
+              <p className='eyebrow'>
+                YOUR NEXT CHAPTER STARTS HERE
+              </p>
 
-        <section id="features" className="features">
-          <h2> What ClearSpend Offers</h2>
+              <h1>
+                More clarity.
+                <br />
+                Less money stress.
+              </h1>
 
-          <div className="feature-grid">
-            <article className="feature-card">
-              <h3>Spending Management</h3>
-              <p>Record and categorize your daily expenses.</p>
-            </article>
+              <p>
+                Start building better habits with a budget
+                that fits your life
+              </p>
+            </div>
 
-            <article className="feature-card">
-              <h3>Goal Management</h3>
-              <p>Create savings goals and monitor your progress.</p>
-            </article>
-
-            <article className="feature-card">
-              <h3>Budget and Limits</h3>
-              <p>Establish budgets and spending limits</p>
-            </article>
-
-            
-
-
-
-            
-          </div>
-
-        </section>
-
-        <section id="about" className="about">
-          <h2>About ClearSpend</h2>
-          <p>
-            ClearSpend is a personal finance management application designed to helo university students develop better financial habits.
-          </p>
-        </section>
-        <RegisterForm/>
+            <div className='registration-card'>
+              <RegisterForm />
+            </div>
+          </section>
+        )}
       </main>
-      <footer>
-        <p>2026 ClearSpend. All rights reserved.</p>
+
+      <footer className='site-footer container'>
+        <span>
+          © {new Date().getFullYear()} ClearSpend
+        </span>
+
+        <span> Small habits. A clearer future.</span>
       </footer>
     </div>
-    
-);
+  );
 }
-
-export default App;

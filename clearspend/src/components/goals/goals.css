@@ -1,0 +1,57 @@
+/* FR1 Goal Management styles (all class names are prefixed goal-/goals- so they do not clash with the rest of the app) */
+.goals-page { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+.goals-intro { color: #475569; margin-top: 0; }
+.goals-layout { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+@media (max-width: 800px) { .goals-layout { grid-template-columns: 1fr; } }
+.goals-new { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
+.goals-new h2, .goals-toolbar h2 { margin-top: 0; font-size: 1.15rem; }
+.goals-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 12px; }
+.goals-toolbar h2 { margin: 0 auto 0 0; }
+.goals-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.goals-empty { background: #f1f5f9; border-radius: 12px; padding: 20px; color: #475569; }
+
+.goal-form, .goal-contribute { display: grid; gap: 12px; }
+.goal-field { display: grid; gap: 4px; }
+.goal-field label, .goal-contribute label { font-weight: 600; font-size: 0.9rem; }
+.goal-field input, .goal-field select, .goal-contribute input, .goals-toolbar select {
+  padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fff; min-width: 0;
+}
+.goal-field input[aria-invalid="true"] { border-color: #dc2626; }
+.goal-contribute { grid-template-columns: 1fr auto; align-items: end; margin: 12px 0 0; }
+.goal-contribute label { grid-column: 1 / -1; }
+.goal-error { color: #b91c1c; font-size: 0.9rem; margin: 4px 0 0; }
+
+.goal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
+.goal-actions button, .goal-contribute button, .goal-alert button {
+  padding: 8px 14px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #1e293b; cursor: pointer; font-size: 0.95rem;
+}
+.goal-actions button:disabled, .goal-contribute button:disabled { opacity: 0.6; cursor: not-allowed; }
+.goal-primary { background: #16a34a !important; border-color: #16a34a !important; color: #fff !important; font-weight: 600; }
+.goal-danger { background: #dc2626 !important; border-color: #dc2626 !important; color: #fff !important; font-weight: 600; }
+.goal-danger-outline { color: #b91c1c !important; border-color: #fca5a5 !important; }
+
+.goal-card { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid #16a34a; border-radius: 12px; padding: 16px; }
+.goal-card.goal-behind { border-left-color: #f59e0b; }
+.goal-card.goal-completed { border-left-color: #2563eb; }
+.goal-card-header { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.goal-card-header h3 { margin: 0 auto 0 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+.goal-badge { font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: #f1f5f9; color: #334155; text-transform: capitalize; }
+.goal-status-behind { background: #fef3c7; color: #92400e; }
+.goal-status-completed { background: #dbeafe; color: #1e40af; }
+.goal-status-on_track { background: #dcfce7; color: #166534; }
+.goal-progress { height: 12px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin: 12px 0 8px; }
+.goal-progress-bar { height: 100%; background: #16a34a; transition: width 0.3s ease; }
+.goal-behind .goal-progress-bar { background: #f59e0b; }
+.goal-completed .goal-progress-bar { background: #2563eb; }
+.goal-numbers { margin: 0 0 4px; }
+.goal-meta { margin: 0; color: #64748b; font-size: 0.9rem; }
+
+.goal-alerts { display: grid; gap: 8px; margin-bottom: 16px; }
+.goal-alert { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 10px; }
+.goal-alert-good { background: #dcfce7; color: #14532d; }
+.goal-alert-warn { background: #fef3c7; color: #78350f; }
+
+.goal-dialog { border: none; border-radius: 12px; padding: 20px; max-width: 420px; width: calc(100% - 32px); box-shadow: 0 10px 40px rgba(0,0,0,.3); }
+.goal-dialog::backdrop { background: rgba(15, 23, 42, 0.5); }
+.goal-dialog h3 { margin-top: 0; }
+.goal-card .goal-form { margin-top: 16px; }

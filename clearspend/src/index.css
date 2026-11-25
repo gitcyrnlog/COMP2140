@@ -1,28 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;500;600;700&display=swap");
+
 :root {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #142c21;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  color: #0f2b1f;
   background: #ffffff;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
 
-  --green: #187e4e
-  --forest: #0c3b27;
-  --mint: #f3f8f4;
-  --muted: #63766c;
+  --green: #1e7f50;
+  --green-dark: #17653f;
+  --forest: #0b3b26;
+  --mint: #f1f6f2;
+  --muted: #5d7266;
   --line: #dce6df;
+  --ink: #0f2b1f;
+  --warn: #c2410c;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
 }
 
-*{
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  background: #ffffff;
+  color: var(--ink);
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
 }
 
@@ -42,9 +57,9 @@ a {
 
 h1,
 h2 {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: var(--serif);
   font-weight: 600;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
 }
 
 p {
@@ -53,13 +68,10 @@ p {
 
 button:focus-visible,
 a:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible {
   outline: 2px solid var(--green);
-  outline-offset: 4px;
-}
-
-html {
-  scroll-behavior: smooth;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

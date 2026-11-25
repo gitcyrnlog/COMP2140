@@ -12,6 +12,8 @@ import { createAuthRouter } from "./auth/authRoutes.js";
 import { createGoalsRouter } from "./goals/goalRoutes.js";
 import { startGoalAlertScheduler } from "./goals/goalAlerts.js";
 import { createNotificationsRouter } from "./utility/notifications.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const databaseUrl = process.env.DATABASE_URL
 
@@ -121,6 +123,12 @@ const errorHandler: ErrorRequestHandler = (error, _req,res,_next) => {
     res.status(500).json({ message: "Something went wrong. "});
 };
 
+const clientDist = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../dist",
+);
+app.use(express.static(clientDist));
+
 app.use(errorHandler);
 
 async function start() {
@@ -128,12 +136,19 @@ async function start() {
     await runMigrations(pool);
     startGoalAlertScheduler(pool);
 
-    app.listen(Number(process.env.PORT ?? 3001), "127.0.0.1", () => {
-        console.log("ClearSpend API running at http://127.0.0.1:3001");
+    const port = Number(process.env.PORT ?? 3001);
+
+    app.listen(port, "0.0.0.0", () => {
+        console.log(`ClearSpend API running on port ${port}`);
     });
 }
 
-start().catch(() => {
-    console.error("API startup failed. Check your database configuration.");
-    process.exit(1);
+start().catch((error: unknown) => {
+  if (error instanceof Error) {
+    console.error("API startup failed:", error.message);
+  } else {
+    console.error("API startup failed:", error);
+  }
+
+  process.exit(1);
 });

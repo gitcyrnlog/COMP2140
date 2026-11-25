@@ -144,11 +144,6 @@ async function start() {
 }
 
 start().catch((error: unknown) => {
-  if (error instanceof Error) {
-    console.error("API startup failed:", error.message);
-  } else {
     console.error("API startup failed:", error);
-  }
-
-  process.exit(1);
+    process.exit(1);
 });

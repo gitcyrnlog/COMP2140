@@ -7,6 +7,11 @@ import { rateLimit } from "express-rate-limit";
 import pg from "pg";
 import argon2 from "argon2";
 import { z } from "zod";
+import { runMigrations } from "./db/migrate.js";
+import { createAuthRouter } from "./auth/authRoutes.js";
+import { createGoalsRouter } from "./goals/goalRoutes.js";
+import { startGoalAlertScheduler } from "./goals/goalAlerts.js";
+import { createNotificationsRouter } from "./utility/notifications.js";
 
 const databaseUrl = process.env.DATABASE_URL
 
@@ -94,6 +99,13 @@ app.post("/api/auth/register", registrationLimiter, async (req,res) => {
     }
 });
 
+// Login / logout / current user (Authentication)
+app.use(createAuthRouter(pool));
+// FR1 Goal Management
+app.use(createGoalsRouter(pool));
+// FR4 Notification history (goal alerts are stored here)
+app.use(createNotificationsRouter(pool));
+
 const errorHandler: ErrorRequestHandler = (error, _req,res,_next) => {
     if (error?.type === "entity.too.large") {
         res.status(413).json({message: "Invalid JSON request"});
@@ -113,6 +125,8 @@ app.use(errorHandler);
 
 async function start() {
     await pool.query("SELECT 1");
+    await runMigrations(pool);
+    startGoalAlertScheduler(pool);
 
     app.listen(Number(process.env.PORT ?? 3001), "127.0.0.1", () => {
         console.log("ClearSpend API running at http://127.0.0.1:3001");

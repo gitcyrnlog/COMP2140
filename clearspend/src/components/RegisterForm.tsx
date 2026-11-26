@@ -1,7 +1,13 @@
 import { useState } from  "react";
 import type { FormEvent } from "react";
+import type { User } from "../models/User";
+import { login } from "../services/AuthService"
 
-export default function RegisterForm() {
+export default function RegisterForm({
+    onRegistered,
+}: {
+    onRegistered: (user: User) => void;
+}) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -59,11 +65,20 @@ export default function RegisterForm() {
                 return;
             }
 
-            setSuccess("Your Clearspend account has been created.");
-            setName("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
+            try {
+                const user = await login(email.trim(), password);
+                onRegistered(user);
+            } catch {
+                setName("");
+                setEmail("");
+                setPassword("");
+                setConfirmPassword("");
+                setSuccess("");
+                setSuccess(
+                    "Account created. Please sign in to open your dashboard.",
+
+                );
+            }
 
         }catch {
             setError("Cannot reach the server. Please try again.");
@@ -155,6 +170,7 @@ export default function RegisterForm() {
                 {success && <p role="status">{success}</p>}
             </form>
         </section>
+        
     );
 
 }

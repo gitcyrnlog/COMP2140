@@ -121,7 +121,7 @@ export default function App() {
             </div>
 
             <div className="registration-card">
-              <RegisterForm />
+              <RegisterForm  onRegistered={setUser} />
               <p>
                 Already have an account?{" "}
                 <button

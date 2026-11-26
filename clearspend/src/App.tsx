@@ -1,3 +1,4 @@
+
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import Home from "./pages/Home";
@@ -5,6 +6,7 @@ import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import type { User } from "./models/User";
 import GoalsPage from "./pages/GoalsPage";
+import RecurringExpensesPage from "./pages/RecurringExpensesPage";
 import { currentUser, logout } from "./services/AuthService";
 import BrandMark from "./components/BrandMark";
 
@@ -16,6 +18,9 @@ export default function App() {
   const [checking, setChecking] = useState(true);
   const [notice, setNotice] = useState("");
 
+  const [dashboardPage, setDashboardPage] =
+    useState<"goals" | "recurring">("goals");
+
   useEffect(() => {
     currentUser()
       .then(setUser)
@@ -26,6 +31,7 @@ export default function App() {
   const handleSessionExpired = useCallback(() => {
     setUser(null);
     setNotice("Your session has expired. Please log in again.");
+    setDashboardPage("goals");
     setPage("login");
   }, []);
 
@@ -38,6 +44,7 @@ export default function App() {
     await logout().catch(() => undefined);
     setUser(null);
     setNotice("");
+    setDashboardPage("goals");
     navigate("home");
   }
 
@@ -58,6 +65,20 @@ export default function App() {
             ClearSpend
           </span>
 
+          <button
+            className="text-button"
+            onClick={() => setDashboardPage("goals")}
+          >
+            Savings goals
+          </button>
+
+          <button
+            className="text-button"
+            onClick={() => setDashboardPage("recurring")}
+          >
+            Recurring expenses
+          </button>
+
           <span>{user.name}</span>
 
           <button
@@ -69,10 +90,16 @@ export default function App() {
         </header>
 
         <main>
-          <GoalsPage
-            user={user}
-            onSessionExpired={handleSessionExpired}
-          />
+          {dashboardPage === "goals" ? (
+            <GoalsPage
+              user={user}
+              onSessionExpired={handleSessionExpired}
+            />
+          ) : (
+            <RecurringExpensesPage
+              onSessionExpired={handleSessionExpired}
+            />
+          )}
         </main>
       </div>
     );

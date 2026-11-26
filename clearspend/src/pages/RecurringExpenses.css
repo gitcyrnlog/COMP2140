@@ -1,0 +1,134 @@
+
+.recurring-page {
+    padding-top: 40px;
+    padding-bottom: 60px;
+}
+
+.recurring-description {
+    color: #526477;
+    margin-bottom: 32px;
+}
+
+.recurring-layout {
+    display: grid;
+    grid-template-columns: minmax(280px, 400px) minmax(0, 1fr);
+    gap: 30px;
+    align-items: start;
+}
+
+.recurring-form,
+.recurring-card {
+    border: 1px solid #dce3eb;
+    border-radius: 16px;
+    padding: 20px;
+    background: white;
+}
+
+.recurring-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recurring-form h2 {
+    margin: 0 0 5px;
+}
+
+.recurring-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.recurring-form input,
+.recurring-form select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font: inherit;
+    background: white;
+    color: #17352b;
+}
+
+.recurring-primary {
+    background: #16864b;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.recurring-primary:hover {
+    background: #126b3c;
+}
+
+.recurring-primary:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+.recurring-card {
+    margin-bottom: 15px;
+}
+
+.recurring-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.recurring-card h3 {
+    margin: 0;
+}
+
+.recurring-card p {
+    color: #526477;
+    margin: 10px 0;
+}
+
+.recurring-card strong {
+    color: #167849;
+}
+
+.recurring-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 15px;
+}
+
+.recurring-delete {
+    border: none;
+    background: transparent;
+    color: #b91c1c;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.recurring-empty {
+    background: #eef3f8;
+    padding: 24px;
+    border-radius: 12px;
+    color: #526477;
+    margin-bottom: 20px;
+}
+
+.recurring-success {
+    color: #167849;
+}
+
+.recurring-error {
+    color: #b91c1c;
+}
+
+@media (max-width: 760px) {
+    .recurring-layout {
+        grid-template-columns: 1fr;
+    }
+}

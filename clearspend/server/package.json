@@ -7,7 +7,8 @@
     "test": "tsx --test src/utility/*.test.ts src/goals/*.test.ts",
     "dev": "tsx watch src/index.ts",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "tsx -e \"import('dotenv/config').then(async()=>{const pg=(await import('pg')).default;const {runMigrations}=await import('./src/db/migrate.ts');const p=new pg.Pool({connectionString:process.env.DATABASE_URL});await runMigrations(p);await p.end();console.log('schema ready')})\""
+    "db:migrate": "tsx -e \"import('dotenv/config').then(async()=>{const pg=(await import('pg')).default;const {runMigrations}=await import('./src/db/migrate.ts');const p=new pg.Pool({connectionString:process.env.DATABASE_URL});await runMigrations(p);await p.end();console.log('schema ready')})\"",
+    "start":"tsx src/index.ts"
   },
   "keywords": [],
   "author": "",

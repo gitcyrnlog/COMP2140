@@ -1,3 +1,4 @@
+
 import "dotenv/config";
 import { randomUUID } from "node:crypto";
 import express from "express";
@@ -15,7 +16,14 @@ import { createNotificationsRouter } from "./utility/notifications.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const databaseUrl = process.env.DATABASE_URL
+// FR6 Recurring Expense Management
+import {
+    createRecurringExpensesRouter,
+    initializeRecurringExpenses,
+    startRecurringExpenseScheduler
+} from "./recurringExpenses/recurringExpenseRoutes.js";
+
+const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
     throw new Error("DATABASE_URL is missing.");
@@ -23,8 +31,8 @@ if (!databaseUrl) {
 
 const pool = new pg.Pool({
     connectionString: databaseUrl,
-    max:10,
-    connectionTimeoutMillis:5000,
+    max: 10,
+    connectionTimeoutMillis: 5000,
 });
 
 pool.on("error", () => {
@@ -39,8 +47,8 @@ app.use(express.json({ limit: "10kb" }));
 
 const registrationSchema = z.object({
     name: z.string().trim().min(1).max(80),
-    email:z.string().trim().toLowerCase().email().max(254),
-    password:z.string().min(15).max(128),
+    email: z.string().trim().toLowerCase().email().max(254),
+    password: z.string().min(15).max(128),
 }).strict();
 
 const registrationLimiter = rateLimit({
@@ -53,16 +61,17 @@ const registrationLimiter = rateLimit({
     },
 });
 
-app.post("/api/auth/register", registrationLimiter, async (req,res) => {
+app.post("/api/auth/register", registrationLimiter, async (req, res) => {
     const parsed = registrationSchema.safeParse(req.body);
 
     if (!parsed.success) {
         res.status(400).json({
             message:
-            "Enter a name, a valid email, and a password of 15-128 characters.",
+                "Enter a name, a valid email, and a password of 15-128 characters.",
         });
         return;
     }
+
     const { name, email, password } = parsed.data;
 
     try {
@@ -72,7 +81,7 @@ app.post("/api/auth/register", registrationLimiter, async (req,res) => {
             timeCost: 2,
             parallelism: 1,
         });
-        
+
         const result = await pool.query(
             `INSERT INTO users (id, name, email, password_hash)
             VALUES ($1, $2, $3, $4)
@@ -80,6 +89,7 @@ app.post("/api/auth/register", registrationLimiter, async (req,res) => {
             RETURNING id, name, email, created_at`,
             [randomUUID(), name, email, passwordHash],
         );
+
         if (result.rows.length === 0) {
             res.status(409).json({
                 message: "An account with this email already exists",
@@ -88,11 +98,10 @@ app.post("/api/auth/register", registrationLimiter, async (req,res) => {
         }
 
         res.status(201).json({
-            message:"Account created successfully.",
-
-            user:result.rows[0],
+            message: "Account created successfully.",
+            user: result.rows[0],
         });
-    }catch{
+    } catch {
         console.error("Registration failed.");
 
         res.status(500).json({
@@ -103,14 +112,19 @@ app.post("/api/auth/register", registrationLimiter, async (req,res) => {
 
 // Login / logout / current user (Authentication)
 app.use(createAuthRouter(pool));
+
 // FR1 Goal Management
 app.use(createGoalsRouter(pool));
+
 // FR4 Notification history (goal alerts are stored here)
 app.use(createNotificationsRouter(pool));
 
-const errorHandler: ErrorRequestHandler = (error, _req,res,_next) => {
+// FR6 Recurring Expense Management
+app.use(createRecurringExpensesRouter(pool));
+
+const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     if (error?.type === "entity.too.large") {
-        res.status(413).json({message: "Invalid JSON request"});
+        res.status(413).json({ message: "Invalid JSON request" });
         return;
     }
 
@@ -120,13 +134,14 @@ const errorHandler: ErrorRequestHandler = (error, _req,res,_next) => {
     }
 
     console.error("Unexpected API error.");
-    res.status(500).json({ message: "Something went wrong. "});
+    res.status(500).json({ message: "Something went wrong. " });
 };
 
 const clientDist = path.resolve(
     path.dirname(fileURLToPath(import.meta.url)),
     "../../dist",
 );
+
 app.use(express.static(clientDist));
 
 app.use(errorHandler);
@@ -134,7 +149,14 @@ app.use(errorHandler);
 async function start() {
     await pool.query("SELECT 1");
     await runMigrations(pool);
+
+    // Initialize FR6 database tables
+    await initializeRecurringExpenses(pool);
+
     startGoalAlertScheduler(pool);
+
+    // Start FR6 automatic expense scheduler
+    startRecurringExpenseScheduler(pool);
 
     const port = Number(process.env.PORT ?? 3001);
 

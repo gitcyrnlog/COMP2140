@@ -10,6 +10,7 @@ import RecurringExpensesPage from "./pages/RecurringExpensesPage";
 import { currentUser, logout } from "./services/AuthService";
 import BrandMark from "./components/BrandMark";
 import BudgetsPage from "./pages/BudgetsPage";
+import NotificationsPage from "./pages/NotificationPage";
 
 type Page = "home" | "register" | "login";
 
@@ -20,7 +21,7 @@ export default function App() {
   const [notice, setNotice] = useState("");
 
   const [dashboardPage, setDashboardPage] =
-    useState<"goals" | "recurring" | "expenses" | "budgets">("goals");
+    useState<"goals" | "recurring" | "expenses" | "budgets" | "notifications">("goals");
 
   useEffect(() => {
     currentUser()
@@ -94,6 +95,13 @@ export default function App() {
               Budgets and Limits
             </button>
 
+          <button
+            className="text-button"
+            onClick={() => setDashboardPage("notifications")}
+          >
+            Notifications
+          </button>
+
           <span>{user.name}</span>
 
           <button
@@ -118,11 +126,13 @@ export default function App() {
             <ExpensesPage
               onSessionExpired={handleSessionExpired}
             />
-          ) : (
+          ) : dashboardPage === "budgets" ? (
             <BudgetsPage
               user={user}
               onSessionExpired={handleSessionExpired}
             />
+          ) : (
+            <NotificationsPage />
           )}
         </main>
       </div>

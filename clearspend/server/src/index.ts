@@ -16,7 +16,7 @@ import { createNotificationsRouter } from "./utility/notifications.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createExpensesRouter } from "./expenses/expenseRoutes.js";
-
+import { createBudgetsRouter } from "./budgets/budgetRoutes.js";
 
 // FR6 Recurring Expense Management
 import {
@@ -123,6 +123,8 @@ app.use(createNotificationsRouter(pool));
 
 // FR6 Recurring Expense Management
 app.use(createRecurringExpensesRouter(pool));
+
+app.use(createBudgetsRouter(pool));
 
 const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     if (error?.type === "entity.too.large") {

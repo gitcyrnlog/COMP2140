@@ -9,6 +9,7 @@ import GoalsPage from "./pages/GoalsPage";
 import RecurringExpensesPage from "./pages/RecurringExpensesPage";
 import { currentUser, logout } from "./services/AuthService";
 import BrandMark from "./components/BrandMark";
+import BudgetsPage from "./pages/BudgetsPage";
 
 type Page = "home" | "register" | "login";
 
@@ -19,7 +20,7 @@ export default function App() {
   const [notice, setNotice] = useState("");
 
   const [dashboardPage, setDashboardPage] =
-    useState<"goals" | "recurring" | "expenses">("goals");
+    useState<"goals" | "recurring" | "expenses" | "budgets">("goals");
 
   useEffect(() => {
     currentUser()
@@ -85,6 +86,13 @@ export default function App() {
             >
               Spending Management
             </button>
+          
+          <button
+            className="text-button"
+            onClick={() => setDashboardPage("budgets")}
+            >
+              Budgets and Limits
+            </button>
 
           <span>{user.name}</span>
 
@@ -104,12 +112,17 @@ export default function App() {
             />
           ) : dashboardPage === "recurring" ? (
             <RecurringExpensesPage
-                onSessionExpired={handleSessionExpired}
+              onSessionExpired={handleSessionExpired}
+            />
+          ) : dashboardPage === "expenses" ? (
+            <ExpensesPage
+              onSessionExpired={handleSessionExpired}
             />
           ) : (
-              <ExpensesPage
-                onSessionExpired={handleSessionExpired}
-              />
+            <BudgetsPage
+              user={user}
+              onSessionExpired={handleSessionExpired}
+            />
           )}
         </main>
       </div>

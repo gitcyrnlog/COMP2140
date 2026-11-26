@@ -2,8 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import type { Expense, ExpenseInput } from "../models/Expense";
 import { ApiError } from "../services/ApiClient";
-import * as expenseService from "../services/ExpenseService";
-import "./Expenses.css";
+import {
+  listExpenses,
+  createExpense,
+  updateExpense,
+  deleteExpense,
+} from "../services/ExpenseService";import "./Expenses.css";
 
 const CATEGORIES = [
     "Housing",
@@ -46,7 +50,7 @@ export default function ExpensesPage({
     const loadExpenses = useCallback(async () => {
         try {
             setError("");
-            setExpenses(await expenseService.listExpenses());
+            setExpenses(await listExpenses());
         } catch (cause) {
             if (cause instanceof ApiError && cause.status === 401) {
                 onSessionExpired();
@@ -103,10 +107,10 @@ export default function ExpensesPage({
 
         try {
             if (editingId) {
-                await expenseService.updateExpense(editingId, input);
+                await updateExpense(editingId, input);
                 setMessage("Expense updated.");
             } else {
-                await expenseService.createExpense(input);
+                await createExpense(input);
                 setMessage("Expense recorded.");
             }
 
@@ -147,7 +151,7 @@ export default function ExpensesPage({
         setMessage("");
 
         try {
-            await expenseService.deleteExpense(expense.id);
+            await deleteExpense(expense.id);
 
             if (editingId === expense.id) {
                 resetForm();

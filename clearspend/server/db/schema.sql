@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     created_at   timestamptz NOT NULL DEFAULT now(),
     updated_at   timestamptz NOT NULL DEFAULT now()
 );
+
 CREATE INDEX IF NOT EXISTS expenses_user_date_idx
     ON expenses (user_id, expense_date DESC);
 
@@ -59,6 +60,24 @@ CREATE TABLE IF NOT EXISTS goal_contributions (
     created_at   timestamptz NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS goal_contributions_goal_idx ON goal_contributions (goal_id);
+
+CREATE TABLE IF NOT EXISTS budgets (
+    id           uuid PRIMARY KEY,
+    user_id      uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    category     text NOT NULL,
+    month_start  date NOT NULL,
+    limit_cents  bigint NOT NULL CHECK (limit_cents > 0),
+    alert_level  smallint NOT NULL DEFAULT 0
+                 CHECK (alert_level IN (0, 1, 2)),
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    updated_at   timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS budgets_user_month_category_unique
+    ON budgets (user_id, month_start, lower(btrim(category)));
+
+CREATE INDEX IF NOT EXISTS budgets_user_month_idx
+    ON budgets (user_id, month_start);
 
 -- FR4 Notification and Progress: notification history. FR1 writes goal alerts here; FR3 can write budget alerts.
 CREATE TABLE IF NOT EXISTS notifications (

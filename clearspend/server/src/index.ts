@@ -15,6 +15,8 @@ import { startGoalAlertScheduler } from "./goals/goalAlerts.js";
 import { createNotificationsRouter } from "./utility/notifications.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createExpensesRouter } from "./expenses/expenseRoutes.js";
+
 
 // FR6 Recurring Expense Management
 import {
@@ -143,7 +145,7 @@ const clientDist = path.resolve(
 );
 
 app.use(express.static(clientDist));
-
+app.use(createExpensesRouter(pool));
 app.use(errorHandler);
 
 async function start() {

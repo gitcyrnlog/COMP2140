@@ -35,6 +35,21 @@ CREATE TABLE IF NOT EXISTS goals (
     created_at          timestamptz NOT NULL DEFAULT now(),
     updated_at          timestamptz NOT NULL DEFAULT now()
 );
+
+-- FR1 Spending Management: manually recorded expenses.
+CREATE TABLE IF NOT EXISTS expenses (
+    id           uuid PRIMARY KEY,
+    user_id      uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    amount_cents integer NOT NULL CHECK (amount_cents > 0),
+    category     varchar(80) NOT NULL,
+    expense_date date NOT NULL,
+    description  varchar(240) NOT NULL,
+    created_at   timestamptz NOT NULL DEFAULT now(),
+    updated_at   timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS expenses_user_date_idx
+    ON expenses (user_id, expense_date DESC);
+
 CREATE INDEX IF NOT EXISTS goals_user_idx ON goals (user_id);
 
 CREATE TABLE IF NOT EXISTS goal_contributions (

@@ -1,4 +1,4 @@
-
+import ExpensesPage from "./pages/ExpensePage";
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import Home from "./pages/Home";
@@ -19,7 +19,7 @@ export default function App() {
   const [notice, setNotice] = useState("");
 
   const [dashboardPage, setDashboardPage] =
-    useState<"goals" | "recurring">("goals");
+    useState<"goals" | "recurring" | "expenses">("goals");
 
   useEffect(() => {
     currentUser()
@@ -79,6 +79,13 @@ export default function App() {
             Recurring expenses
           </button>
 
+          <button
+            className="text-button"
+            onClick={() => setDashboardPage("expenses")}
+            >
+              Spending Management
+            </button>
+
           <span>{user.name}</span>
 
           <button
@@ -95,10 +102,14 @@ export default function App() {
               user={user}
               onSessionExpired={handleSessionExpired}
             />
-          ) : (
+          ) : dashboardPage === "recurring" ? (
             <RecurringExpensesPage
-              onSessionExpired={handleSessionExpired}
+                onSessionExpired={handleSessionExpired}
             />
+          ) : (
+              <ExpensesPage
+                onSessionExpired={handleSessionExpired}
+              />
           )}
         </main>
       </div>
